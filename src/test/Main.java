@@ -13,19 +13,21 @@ package test;
 
 import GUI.WelcomePage;
 
+import Login.User;
+import Login.UserStatistics;
 import cards.Cards;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Main {
     public static void main(String[] args) {
         String username;
         Cards cards=new Cards();
         cards.initializer();
         System.out.println(cards.deck);
+        UserStatistics userStatistics = new UserStatistics();
         WelcomePage x=new WelcomePage();
-
-        username=x.username;
-        System.out.println(username);
-
-
 
 
     }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class User {
     private String username ;
     private String password;
@@ -21,25 +22,21 @@ public class User {
     public int score;
 
 
-
-
-
     public void winMatch(int matchScore){
         winCount++;
         totalGameCount++;
         score+=matchScore;
+        updateScore(username,winCount,loseCount,totalGameCount,score);
     }
     public void loseMatch(int matchScore){
         loseCount++;
         totalGameCount++;
         score-=matchScore;
+        updateScore(username,winCount,loseCount,totalGameCount,score);
     }
-    public int averageScorePerGame(){
-        return score/totalGameCount;
-    }
-    public float winLossRatio(){
-        return (float)winCount/loseCount;
-    }
+
+
+
 
     public void login(String username, String password) {
         try {
@@ -81,7 +78,7 @@ public class User {
         }
 
     }
-    public void register(String username, String password) {
+    public boolean register(String username, String password) {
         try {
             File myObj = new File("src/data/user.txt");
             Scanner myReader = new Scanner(myObj);
@@ -92,7 +89,7 @@ public class User {
                 if (user[0].equals(username)) {
                     System.out.println("Username already exists");
                     isExist = true;
-                    return;
+                    return false;
                 }
 
             }
@@ -101,15 +98,18 @@ public class User {
 
             output.append("\n"+username + "," + password );
             output.close();
+            updateScore(username, 0,0,0,0);//username,winCount,loseCount,totalGameCount,score
+            return true;
 
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void updateScore(String username, int newScore) {
-        File myObj = new File("src/data/user.txt");
+    public  void updateScore(String username, int winCount,int loseCount,int totalGameCount,int score) {
+        File myObj = new File("src/data/logs.txt");
         List<String> fileContent = new ArrayList<>();
         try {
             Scanner myReader = new Scanner(myObj);
@@ -120,7 +120,7 @@ public class User {
                 String[] user = data.split(",");
                 if (user[0].equals(username)) {
                     // Assuming the score is in the second column
-                    String updatedData = user[0] + "," + newScore;
+                    String updatedData = user[0] + "," + winCount+","+loseCount+","+totalGameCount+","+score;
                     fileContent.add(updatedData);
                     updated = true;
                 } else {
@@ -131,7 +131,7 @@ public class User {
 
             // If the user does not exist, add them to the file
             if (!updated) {
-                fileContent.add(username + "," + newScore);
+                fileContent.add(username + "," + winCount+","+loseCount+","+totalGameCount+","+score);
             }
 
             // Write the new content back to the file
@@ -149,6 +149,8 @@ public class User {
             e.printStackTrace();
         }
     }
+
+
 
 
 
