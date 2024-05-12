@@ -32,8 +32,19 @@ public class GameValidation {
     public boolean validPlayActionsCards(ActionCards card, GameSession gameSession)  {
         if(card.color==gameSession.color ){
             return true;
+        } else if (gameSession.discardpile instanceof ActionCards){
+            if(card.skill.equals(((ActionCards) gameSession.discardpile).skill)){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
-      return false;
+
+        else{
+            return false;
+        }
+
     }
 
 

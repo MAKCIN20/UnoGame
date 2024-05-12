@@ -118,8 +118,8 @@ public class MainPage extends JFrame {
             ArrayList<Float> stats = allStats.get(username);
             data[index][0] = username;
             data[index][1] = stats.get(0);
-            data[index][2] = stats.get(1); // Assuming this is Total Game Played
-            data[index][3] = stats.get(2); // Assuming this is Score
+            data[index][2] = stats.get(2);
+            data[index][3] = stats.get(3);
             data[index][4] = "Details";
             index++;
         }

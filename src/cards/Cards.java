@@ -20,6 +20,7 @@ public class Cards {
             deck.remove(temp_deck.get(i));
 
         }
+        System.out.println("Count of cards given to player: "+cards_to_give.size());
 
         return cards_to_give;
 
@@ -29,11 +30,15 @@ public class Cards {
         List<NumberCard> numberCards = initializeNumberCard();
         List<ActionCards> actionCards = initializeActionCards();
         List<WildCard> wildCards = initializeWildCard();
+        System.out.println("Count of Number cards: "+numberCards.size());
+        System.out.println("Count of Action cards: "+actionCards.size());
+        System.out.println("Count of Wild cards: "+wildCards.size());
 
         deck.addAll(numberCards);
         deck.addAll(actionCards);
         deck.addAll(wildCards);
         shuffleCards();
+        System.out.println("Deck initialized, "+ deck.size() + " cards in deck");
     }
 
     public List<NumberCard> initializeNumberCard() {
@@ -73,6 +78,7 @@ public class Cards {
         return wildCards;
     }
     public void shuffleCards() {
+        System.out.println("Shuffling deck...");
         Collections.shuffle(deck);
     }
 }

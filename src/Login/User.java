@@ -52,6 +52,7 @@ public class User {
                 String[] user = data.split(",");
                 if (user[0].equals(username) && user[1].equals(password)) {
                     isLogged = true;
+                    System.out.println("User "+username+" Logged in successfully");
                     break;
                 }
             }
@@ -94,6 +95,7 @@ public class User {
                 if (user[0].equals(username)) {
                     System.out.println("Username already exists");
                     isExist = true;
+
                     return false;
                 }
 
@@ -104,6 +106,7 @@ public class User {
             output.append("\n"+username + "," + password );
             output.close();
             updateScore(username, 0,0,0,0);//username,winCount,loseCount,totalGameCount,score
+            System.out.println("User "+ username+" registered successfully");
             return true;
 
         } catch (IOException e) {
@@ -128,6 +131,7 @@ public class User {
                     String updatedData = user[0] + "," + winCount+","+loseCount+","+totalGameCount+","+score;
                     fileContent.add(updatedData);
                     updated = true;
+                    System.out.println("User "+username+" score is updated successfully");
                 } else {
                     fileContent.add(data);
                 }

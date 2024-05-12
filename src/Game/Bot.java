@@ -72,6 +72,7 @@ public class Bot extends Player {
 
             if (canplay == false) {
                 drawCard(gameSession.deck);
+                System.out.println("Bot drew a card");
             } else {
                 System.out.println("Bot played card: " + card_selected.getClass());
                 playCard(card_selected, gameSession, color);

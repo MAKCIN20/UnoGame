@@ -22,12 +22,21 @@ public class Player {
     }
     public void drawCard(ArrayList deck) {
         ArrayList<Cards> card_deck = new ArrayList(deck);
-        cards_in_hand.add(card_deck.get(0));
-        deck.remove(card_deck.get(0));
+        if (deck.size()!=0){
+            cards_in_hand.add(card_deck.get(0));
+            deck.remove(card_deck.get(0));
+            System.out.println("Card drawn");
+
+        }
+        else{
+            System.out.println("Deck is empty");
+
+        }
     }
     public void declareUno(){
         if(cards_in_hand.size() == 1){
             declareUno = true;
+            System.out.println("Uno declared");
         }
     }
 
@@ -49,6 +58,7 @@ public class Player {
             gameSession.discardpile = card;
             cards_in_hand.remove(card);
             gameSession.color = card.color;
+            System.out.println("Number card played "+card.number+" "+card.color);
         }
     }
     public void playActionCard(ActionCards card, GameSession gameSession)  {
@@ -59,6 +69,7 @@ public class Player {
             if(card.skill=="reverse"){
                 gameSession.clockwise = !gameSession.clockwise;
                 gameSession.color= card.color;
+                System.out.println("Game direction reversed");
 
             } else if (card.skill=="draw2") {
                 Player next_player= gameSession.players.get(gameSession.findNextPlayer(gameSession.clockwise));
@@ -66,10 +77,12 @@ public class Player {
                     next_player.drawCard(gameSession.deck);
                 }
                 gameSession.color= card.color;
+                System.out.println("Next player drew 2 cards");
 
             } else if(card.skill=="skip"){
                 gameSession.playerTurn = gameSession.findNextPlayer(gameSession.clockwise);
                 gameSession.color= card.color;
+                System.out.println("Next player skipped");
             }
 
 
@@ -78,7 +91,9 @@ public class Player {
     public void playWildCard(Cards card, GameSession gameSession, String color) {
         WildCard wildCard = (WildCard) card;
         if (wildCard.skill=="draw4") {
+            System.out.println("Wild card played");
             Player next_player= gameSession.players.get(gameSession.findNextPlayer(gameSession.clockwise));
+            System.out.println("Next player drew 4 cards");
             for (int i = 0; i < 4; i++) {
                 next_player.drawCard(gameSession.deck);
             }

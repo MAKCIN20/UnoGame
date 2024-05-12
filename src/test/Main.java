@@ -14,6 +14,8 @@ package test;
 import GUI.GamePage;
 import GUI.WelcomePage;
 
+
+import Login.Logs;
 import Login.User;
 import Login.UserStatistics;
 import cards.Cards;
@@ -23,13 +25,11 @@ import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) {
-        String username;
-        Cards cards=new Cards();
-        cards.initializer();
-        System.out.println(cards.deck);
+        Logs log = new Logs();
 
-        UserStatistics userStatistics = new UserStatistics();
-        WelcomePage x=new WelcomePage();
+        WelcomePage start=new WelcomePage();
+
+
 
 
 
