@@ -1,13 +1,8 @@
 package Login;
-/**
- * construction hatalı  olabilir bu kısıma bakılması gerekiyor
- * ek olarak login kısmındaki write to file kısmı buraya çekilip düzeltilmeli
- * istatistiklerin txt ye yazılması için bir fonksiyonda oraya yazılması gerekiyor
- *
- */
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -174,10 +169,12 @@ public class User {
         this.username = username;
         this.password = password;
         this.isLogged = false;
-        this.winCount = 0;
-        this.loseCount = 0;
-        this.totalGameCount = 0;
-        this.score=0;
+        HashMap scoreMap = new UserStatistics().getSimpleStatistics();
+        ArrayList<Float> stats= (ArrayList) scoreMap.get(username);
+        this.winCount = stats.get(0).intValue();
+        this.loseCount = stats.get(1).intValue();
+        this.totalGameCount = stats.get(2).intValue();
+        this.score=stats.get(3).intValue();
     }
         // Getter and Setter
     public String getUsername() {

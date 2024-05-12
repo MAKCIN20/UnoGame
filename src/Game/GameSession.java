@@ -76,19 +76,39 @@ public class GameSession {
                 ActionCards card = (ActionCards) discardpile;
                 System.out.println("Action card is played");
                 if (card.skill.equals("draw2")) {
-                    player.drawCard(deck);
-                    player.drawCard(deck);
-                    System.out.println("Player " + playerTurn + " draws 2 cards");
+                    if (deck.size()>2){
+                        player.drawCard(deck);
+                        player.drawCard(deck);
+                        System.out.println("Player " + playerTurn + " draws 2 cards");
+                    }
+                    else{
+                        System.out.println("Deck is empty");
+                        deck.remove(0);
+                        deck.remove(0);
+                        isGameEnd();
+
+                    }
+
                 }
             }
             if (discardpile instanceof WildCard) {
                 WildCard card = (WildCard) discardpile;
                 if (card.skill.equals("draw4")) {
-                    player.drawCard(deck);
-                    player.drawCard(deck);
-                    player.drawCard(deck);
-                    player.drawCard(deck);
-                    System.out.println("Player " + playerTurn + " draws 4 cards");
+                    if (deck.size()>4){
+                        player.drawCard(deck);
+                        player.drawCard(deck);
+                        player.drawCard(deck);
+                        player.drawCard(deck);
+                        System.out.println("Player " + playerTurn + " draws 4 cards");
+                    }
+                    else{
+                        System.out.println("Deck is empty");
+                        deck.remove(0);
+                        deck.remove(0);
+                        deck.remove(0);
+                        deck.remove(0);
+                        isGameEnd();
+                    }
 
             }
         }
