@@ -8,6 +8,7 @@ import cards.Cards;
 import cards.NumberCard;
 import cards.WildCard;
 import exceptions.WrongCardPlayed;
+import test.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -277,6 +278,9 @@ public class GamePage extends JFrame {
             drawCardButton.setEnabled(false);
             declareUnoButton.setEnabled(false);
             JOptionPane.showMessageDialog(this, "Game Over!");
+            dispose();
+            MainPage mainPage = new MainPage(gameSession.username, gameSession.password);
+
         }
     }
 
