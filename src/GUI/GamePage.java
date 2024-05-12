@@ -24,6 +24,7 @@ public class GamePage extends JFrame {
     private JLabel[] botLabels;
     private JLabel discardPileLabel;
     private JLabel gameDirectionLabel;
+    private JLabel colorDiscardPileLabel;
     private GameSession gameSession;
 
     public GamePage(GameSession gameSession) throws WrongCardPlayed {
@@ -33,7 +34,7 @@ public class GamePage extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initializeComponents();
         setVisible(true);
-        gameSession.startGame();
+
         updateGameState();
     }
 
@@ -66,18 +67,24 @@ public class GamePage extends JFrame {
         discardPileLabel.setFont(new Font("Arial", Font.BOLD, 18));
         discardPileLabel.setForeground(Color.WHITE);
         mainPanel.add(discardPileLabel, BorderLayout.CENTER);
+        //Color of the discard pile
+        colorDiscardPileLabel = new JLabel("Color of the discard pile: " + gameSession.color, SwingConstants.CENTER);
+        colorDiscardPileLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        colorDiscardPileLabel.setForeground(Color.WHITE);
+        mainPanel.add(colorDiscardPileLabel, BorderLayout.EAST);
+
 
         // Game Direction
         gameDirectionLabel = new JLabel("Game Direction: " + (gameSession.clockwise ? "Clockwise" : "Counter-Clockwise"), SwingConstants.CENTER);
         gameDirectionLabel.setFont(new Font("Arial", Font.BOLD, 18));
         gameDirectionLabel.setForeground(Color.WHITE);
-        mainPanel.add(gameDirectionLabel, BorderLayout.SOUTH);
+        mainPanel.add(gameDirectionLabel, BorderLayout.WEST);
 
         // Player Hand
         playerHandModel = new DefaultListModel<>();
         playerHandList = new JList<>(playerHandModel);
         playerHandList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        playerHandList.setBackground(Color.LIGHT_GRAY);
+        playerHandList.setBackground(Color.GRAY);
         playerHandList.setForeground(Color.BLACK);
         JScrollPane playerHandScrollPane = new JScrollPane(playerHandList);
 
@@ -155,6 +162,7 @@ public class GamePage extends JFrame {
             } else if (card instanceof WildCard) {
                 WildCard wildCard = (WildCard) card;
                 playerHandModel.addElement(wildCard.skill);
+
             }
         }
     }
@@ -181,7 +189,7 @@ public class GamePage extends JFrame {
                     player.selectCard(selectedCard, gameSession, selectedColor.toLowerCase());
                 }
             } else {
-                player.selectCard(selectedCard, gameSession, ""); // No color for non-wild cards
+                player.selectCard(selectedCard, gameSession, "red"); // No color for non-wild cards
             }
             discardPileLabel.setText("Discard Pile: " + getTopDiscardCard()); // Update discard pile
             updateGameState(); // Update state after playing card
@@ -199,8 +207,13 @@ public class GamePage extends JFrame {
     }
 
     private void updateGameState() throws WrongCardPlayed {
-     gameSession.startGame();
+        colorDiscardPileLabel.setText("Color of the discard pile: " + gameSession.color);
+        gameDirectionLabel.setText("Game Direction: " + (gameSession.clockwise ? "Clockwise" : "Counter-Clockwise"));
      loadPlayerHand();
+     botLabels[0].setText("Bot: " + gameSession.players.get(0) + " - Cards: " + ((Bot) gameSession.players.get(0)).cardCount());
+     botLabels[1].setText("Bot: " + gameSession.players.get(1) + " - Cards: " + ((Bot) gameSession.players.get(1)).cardCount());
+     botLabels[2].setText("Bot: " + gameSession.players.get(2) + " - Cards: " + ((Bot) gameSession.players.get(2)).cardCount());
+
 
     }
 
