@@ -252,9 +252,9 @@ public class GamePage extends JFrame {
     }
 
     private void updateGameState() throws WrongCardPlayed {
-        colorDiscardPileLabel.setText("Color of the discard pile: " + gameSession.color);
-        gameDirectionLabel.setText("Game Direction: " + (gameSession.clockwise ? "Clockwise" : "Counter-Clockwise"));
-        remainingDeckLabel.setText("Remaining Cards: " + gameSession.deck.size());
+
+
+
         loadPlayerHand();
         botLabels[0].setText("Bot: " + gameSession.players.get(0) + " - Cards: " + ((Bot) gameSession.players.get(0)).cardCount());
         botLabels[1].setText("Bot: " + gameSession.players.get(1) + " - Cards: " + ((Bot) gameSession.players.get(1)).cardCount());
@@ -268,9 +268,12 @@ public class GamePage extends JFrame {
                 discardPileLabel.setText("Discard Pile: " + getTopDiscardCard()); // Update discard pile after bot plays
                 playerTurn = gameSession.findNextPlayer( gameSession.clockwise);
                 gameSession.drawCards(gameSession.discardpile);
+                remainingDeckLabel.setText("Remaining Cards: " + gameSession.deck.size());
+                colorDiscardPileLabel.setText("Color of the discard pile: " + gameSession.color);
+                gameDirectionLabel.setText("Game Direction: " + (gameSession.clockwise ? "Clockwise" : "Counter-Clockwise"));
                 loadPlayerHand(); // Update player hand for UI
             }
-            updateGameState(); // Ensure final state is reflected in UI
+             // Ensure final state is reflected in UI
         }
 
         if (gameSession.isGameEnd()) {
@@ -284,13 +287,5 @@ public class GamePage extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        // Create a new GameSession
-        GameSession gameSession = new GameSession("admin","admin");
-        try {
-            GamePage gamePage = new GamePage(gameSession);
-        } catch (WrongCardPlayed e) {
-            e.printStackTrace();
-        }
-    }
+
 }
