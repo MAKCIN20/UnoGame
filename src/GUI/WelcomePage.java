@@ -157,11 +157,11 @@ public class WelcomePage {
 
         if (response == JOptionPane.YES_OPTION) {
             frame.dispose();
-            MainPage mainPage = new MainPage(usernameField.getText());
+            MainPage mainPage = new MainPage(usernameField.getText(),new String (passwordField.getPassword()));
 
         } else {
             try {
-                GameSession gameSession = new GameSession(usernameField.getText());
+                GameSession gameSession = new GameSession(usernameField.getText(),new String(passwordField.getPassword()));
                 GamePage gamePage = new GamePage(gameSession);
                 frame.dispose();
             } catch (WrongCardPlayed e) {

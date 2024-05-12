@@ -14,20 +14,20 @@ public class Player {
 
 
     private ArrayList<Cards> cards_in_hand;
-    public boolean declearedUNO;
+    public boolean declareUno;
 
     public Player(ArrayList<Cards> cards_in_hand) {
         this.cards_in_hand = cards_in_hand;
-        this.declearedUNO = false;
+        this.declareUno = false;
     }
     public void drawCard(ArrayList deck) {
         ArrayList<Cards> card_deck = new ArrayList(deck);
         cards_in_hand.add(card_deck.get(0));
         deck.remove(card_deck.get(0));
     }
-    public void decleareUno(){
+    public void declareUno(){
         if(cards_in_hand.size() == 1){
-            declearedUNO = true;
+            declareUno = true;
         }
     }
 
@@ -89,21 +89,7 @@ public class Player {
         cards_in_hand.remove(card);
 
     }
-    public float calculateScore(ArrayList cards_in_hand){
-        float score = 0;
-        for (int i = 0; i < cards_in_hand.size(); i++) {
-            if (cards_in_hand.get(i) instanceof NumberCard) {
-                NumberCard numberCard = (NumberCard) cards_in_hand.get(i);
-                score += numberCard.number;
-            } else if (cards_in_hand.get(i) instanceof ActionCards) {
-                score += 20;
-            } else {
-                score += 50;
-            }
-        }
-        return score;
 
-    }
 
 
 

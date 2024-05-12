@@ -22,8 +22,9 @@ public class MainPage extends JFrame {
     private JButton playButton;
     private JLabel imageLabel1;
     private JLabel imageLabel2;
+    public String Password;
 
-    public MainPage(String currentUser) {
+    public MainPage(String currentUser,String password) {
         setTitle("Uno Game - Main Page");
         setSize(1800, 920);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,7 +60,7 @@ public class MainPage extends JFrame {
         playButton.setBackground(Color.BLACK);
         playButton.addActionListener(e -> {
             try {
-                startGame(currentUser);
+                startGame(currentUser,password);
             } catch (WrongCardPlayed ex) {
                 throw new RuntimeException(ex);
             }
@@ -96,10 +97,10 @@ public class MainPage extends JFrame {
 
     }
 
-    private void startGame(String currentUser) throws WrongCardPlayed {
+    private void startGame(String currentUser,String password) throws WrongCardPlayed {
         System.out.println("Starting game...");
         dispose();
-        GameSession gameSession = new GameSession(currentUser);
+        GameSession gameSession = new GameSession(currentUser,password);
         GamePage gamePage = new GamePage(gameSession);
 
 

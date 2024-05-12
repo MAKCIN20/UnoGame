@@ -1,5 +1,6 @@
 package Game;
 
+import Login.User;
 import cards.ActionCards;
 import cards.Cards;
 import cards.NumberCard;
@@ -12,6 +13,7 @@ import java.util.Random;
 
 public class GameSession {
     public String username;
+    public String password;
     public int sessionID;
     public ArrayList<Cards> deck;
     public String color;
@@ -22,13 +24,14 @@ public class GameSession {
     public Integer playerTurn;
 
 
-    public GameSession(String username) {
+    public GameSession(String username,String password) {
         Random random = new Random();
         this.sessionID = random.nextInt(89999) + 10000;
         this.deck = setDeck();
         this.clockwise = true;
         this.discardpile = deck.get(50);
         this.username=username;
+        this.password=password;
         this.players=createPlayer(this.deck);
         if (discardpile instanceof ActionCards){
             ActionCards card = (ActionCards) discardpile;
@@ -90,7 +93,7 @@ public class GameSession {
             Bot bot = (Bot) players.get(playerTurn);
             bot.findCard(this);
             if (bot.cardCount() == 1) {
-                bot.decleareUno();
+                bot.declareUno();
             }
             if (bot.cardCount() == 0) {
                 System.out.println("Player " + playerTurn + " wins");
@@ -126,14 +129,41 @@ public class GameSession {
         Bot bot2 = (Bot) players.get(1);
         Bot bot3 = (Bot) players.get(2);
         Player player = (Player) players.get(3);
-        if (bot1.cardCount() == 0 || bot2.cardCount() == 0 || bot3.cardCount() == 0 || player.getCards_in_hand().size()== 0) {
+        User user= new User(username,password);
+        if (bot1.cardCount() == 0 || bot2.cardCount() == 0 || bot3.cardCount() == 0 ) {
+            user.loseMatch(calculateScore(players));
+            return true;
+        } else if (player.getCards_in_hand().size()==0) {
+            user.winMatch(calculateScore(players));
             return true;
         } else if (deck.size()==0) {
+            user.drawMatch(calculateScore(players));
             return true;
         } else {
             return false;
         }
 
+
+    }
+    public int calculateScore(ArrayList<Player> players){
+        int score = 0;
+        for (Player player:players){
+            for(Cards card:player.getCards_in_hand()){
+                if (card instanceof NumberCard){
+                    score+=((NumberCard) card).number;
+                }
+                else if(card instanceof ActionCards){
+                    score+=20;
+                }
+                else if (card instanceof WildCard){
+                    score+=50;
+                }
+
+            }
+
+        }
+
+        return score;
 
     }
 

@@ -78,7 +78,7 @@ public class Bot extends Player {
             }
         }
         if(getCards_in_hand().size()==1){
-            decleareUno();
+            declareUno();
         }
 
 

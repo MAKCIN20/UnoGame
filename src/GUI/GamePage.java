@@ -21,10 +21,12 @@ public class GamePage extends JFrame {
     private JList<String> playerHandList;
     private JButton playCardButton;
     private JButton drawCardButton;
+    private JButton declareUnoButton;
     private JLabel[] botLabels;
     private JLabel discardPileLabel;
     private JLabel gameDirectionLabel;
     private JLabel colorDiscardPileLabel;
+    private JLabel remainingDeckLabel;  // Label for remaining cards in deck
     private GameSession gameSession;
     private int playerTurn = 3; // Track player turn here
 
@@ -43,45 +45,62 @@ public class GamePage extends JFrame {
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.DARK_GRAY);
 
+        // Top Panel for session info and bots
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(Color.DARK_GRAY);
+
         // Session Name
-        sessionNameLabel = new JLabel("Session: " + gameSession.sessionID, SwingConstants.CENTER);
+        sessionNameLabel = new JLabel("Session: " + gameSession.sessionID);
         sessionNameLabel.setFont(new Font("Arial", Font.BOLD, 20));
         sessionNameLabel.setForeground(Color.WHITE);
-        mainPanel.add(sessionNameLabel, BorderLayout.NORTH);
+        topPanel.add(sessionNameLabel, BorderLayout.WEST);
 
         // Bots Information
         JPanel botsPanel = new JPanel(new GridLayout(1, 3));
         botsPanel.setBackground(Color.DARK_GRAY);
         botLabels = new JLabel[3];
-
         for (int i = 0; i < gameSession.players.size() - 1; i++) {
             Bot bot = (Bot) gameSession.players.get(i);
-            botLabels[i] = new JLabel("Bot: " + bot + " - Cards: " + bot.cardCount(), SwingConstants.CENTER);
+            botLabels[i] = new JLabel("Bot " + (i + 1) + ": " + bot.cardCount() + " cards", SwingConstants.CENTER);
             botLabels[i].setFont(new Font("Arial", Font.PLAIN, 18));
             botLabels[i].setForeground(Color.WHITE);
             botsPanel.add(botLabels[i]);
         }
-        mainPanel.add(botsPanel, BorderLayout.NORTH);
+        topPanel.add(botsPanel, BorderLayout.CENTER);
+
+        // Remaining Deck
+        remainingDeckLabel = new JLabel("Remaining Cards: " + gameSession.deck.size(), SwingConstants.RIGHT);
+        remainingDeckLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        remainingDeckLabel.setForeground(Color.WHITE);
+        topPanel.add(remainingDeckLabel, BorderLayout.EAST);
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+
+        // Center Panel for game state
+        JPanel centerPanel = new JPanel(new GridLayout(2, 2));
+        centerPanel.setBackground(Color.DARK_GRAY);
 
         // Discard Pile
         discardPileLabel = new JLabel("Discard Pile: " + getTopDiscardCard(), SwingConstants.CENTER);
         discardPileLabel.setFont(new Font("Arial", Font.BOLD, 18));
         discardPileLabel.setForeground(Color.WHITE);
-        mainPanel.add(discardPileLabel, BorderLayout.CENTER);
+        centerPanel.add(discardPileLabel);
 
         // Color of the discard pile
-        colorDiscardPileLabel = new JLabel("Color of the discard pile: " + gameSession.color, SwingConstants.CENTER);
+        colorDiscardPileLabel = new JLabel("Discard Pile Color: " + gameSession.color, SwingConstants.CENTER);
         colorDiscardPileLabel.setFont(new Font("Arial", Font.BOLD, 18));
         colorDiscardPileLabel.setForeground(Color.WHITE);
-        mainPanel.add(colorDiscardPileLabel, BorderLayout.EAST);
+        centerPanel.add(colorDiscardPileLabel);
 
         // Game Direction
         gameDirectionLabel = new JLabel("Game Direction: " + (gameSession.clockwise ? "Clockwise" : "Counter-Clockwise"), SwingConstants.CENTER);
         gameDirectionLabel.setFont(new Font("Arial", Font.BOLD, 18));
         gameDirectionLabel.setForeground(Color.WHITE);
-        mainPanel.add(gameDirectionLabel, BorderLayout.WEST);
+        centerPanel.add(gameDirectionLabel);
 
-        // Player Hand
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+        // Player Panel at the bottom
         playerHandModel = new DefaultListModel<>();
         playerHandList = new JList<>(playerHandModel);
         playerHandList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -89,7 +108,7 @@ public class GamePage extends JFrame {
         playerHandList.setForeground(Color.BLACK);
         JScrollPane playerHandScrollPane = new JScrollPane(playerHandList);
 
-        JLabel playerLabel = new JLabel("Your Hand:", SwingConstants.CENTER);
+        JLabel playerLabel = new JLabel("Cards in Hand:", SwingConstants.CENTER);
         playerLabel.setFont(new Font("Arial", Font.BOLD, 18));
         playerLabel.setForeground(Color.WHITE);
 
@@ -97,6 +116,35 @@ public class GamePage extends JFrame {
         playerPanel.setBackground(Color.DARK_GRAY);
         playerPanel.add(playerLabel, BorderLayout.NORTH);
         playerPanel.add(playerHandScrollPane, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+        buttonPanel.setBackground(Color.DARK_GRAY);
+
+        drawCardButton = new JButton("Draw Card");
+        drawCardButton.setBackground(Color.BLACK);
+        drawCardButton.setForeground(Color.WHITE);
+        drawCardButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    drawCard();
+                } catch (WrongCardPlayed ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+        buttonPanel.add(drawCardButton);
+
+        declareUnoButton = new JButton("Declare UNO");
+        declareUnoButton.setBackground(Color.BLACK);
+        declareUnoButton.setForeground(Color.WHITE);
+        declareUnoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                declareUno();
+            }
+        });
+        buttonPanel.add(declareUnoButton);
 
         playCardButton = new JButton("Play Selected Card");
         playCardButton.setBackground(Color.BLACK);
@@ -113,22 +161,9 @@ public class GamePage extends JFrame {
                 }
             }
         });
-        playerPanel.add(playCardButton, BorderLayout.SOUTH);
+        buttonPanel.add(playCardButton);
 
-        drawCardButton = new JButton("Draw Card");
-        drawCardButton.setBackground(Color.BLACK);
-        drawCardButton.setForeground(Color.WHITE);
-        drawCardButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    drawCard();
-                } catch (WrongCardPlayed ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-        playerPanel.add(drawCardButton, BorderLayout.NORTH);
+        playerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         mainPanel.add(playerPanel, BorderLayout.SOUTH);
 
@@ -165,7 +200,6 @@ public class GamePage extends JFrame {
             } else if (card instanceof WildCard) {
                 WildCard wildCard = (WildCard) card;
                 playerHandModel.addElement(wildCard.skill);
-
             }
         }
     }
@@ -210,9 +244,16 @@ public class GamePage extends JFrame {
         updateGameState();
     }
 
+    private void declareUno() {
+        Player player = (Player) gameSession.players.get(gameSession.players.size() - 1);
+        player.declareUno();
+        JOptionPane.showMessageDialog(this, "UNO declared!");
+    }
+
     private void updateGameState() throws WrongCardPlayed {
         colorDiscardPileLabel.setText("Color of the discard pile: " + gameSession.color);
         gameDirectionLabel.setText("Game Direction: " + (gameSession.clockwise ? "Clockwise" : "Counter-Clockwise"));
+        remainingDeckLabel.setText("Remaining Cards: " + gameSession.deck.size());
         loadPlayerHand();
         botLabels[0].setText("Bot: " + gameSession.players.get(0) + " - Cards: " + ((Bot) gameSession.players.get(0)).cardCount());
         botLabels[1].setText("Bot: " + gameSession.players.get(1) + " - Cards: " + ((Bot) gameSession.players.get(1)).cardCount());
@@ -234,7 +275,18 @@ public class GamePage extends JFrame {
         if (gameSession.isGameEnd()) {
             playCardButton.setEnabled(false);
             drawCardButton.setEnabled(false);
+            declareUnoButton.setEnabled(false);
             JOptionPane.showMessageDialog(this, "Game Over!");
+        }
+    }
+
+    public static void main(String[] args) {
+        // Create a new GameSession
+        GameSession gameSession = new GameSession("admin","admin");
+        try {
+            GamePage gamePage = new GamePage(gameSession);
+        } catch (WrongCardPlayed e) {
+            e.printStackTrace();
         }
     }
 }

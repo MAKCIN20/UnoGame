@@ -34,6 +34,11 @@ public class User {
         score-=matchScore;
         updateScore(username,winCount,loseCount,totalGameCount,score);
     }
+    public void drawMatch(int matchScore){
+        totalGameCount++;
+        score+=matchScore;
+        updateScore(username,winCount,loseCount,totalGameCount,score);
+    }
 
 
 
