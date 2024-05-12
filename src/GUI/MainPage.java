@@ -98,8 +98,10 @@ public class MainPage extends JFrame {
 
     private void startGame(String currentUser) throws WrongCardPlayed {
         System.out.println("Starting game...");
+        dispose();
         GameSession gameSession = new GameSession(currentUser);
         GamePage gamePage = new GamePage(gameSession);
+
 
     }
     public void leaderBoard(){UserStatistics userStatistics = new UserStatistics();
@@ -142,7 +144,5 @@ public class MainPage extends JFrame {
         leaderboardTable.setForeground(Color.WHITE);
     }
 
-    public static void main(String[] args) {
-        new MainPage("Welcome to main page");
-    }
+
 }

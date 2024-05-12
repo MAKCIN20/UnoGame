@@ -3,12 +3,14 @@ package Game;
 import cards.ActionCards;
 import cards.Cards;
 import cards.NumberCard;
+import cards.WildCard;
 import exceptions.WrongCardPlayed;
 
 import java.util.ArrayList;
 
 public class Player {
     public String username;
+
 
 
     private ArrayList<Cards> cards_in_hand;
@@ -59,13 +61,14 @@ public class Player {
                 gameSession.color= card.color;
 
             } else if (card.skill=="draw2") {
+                Player next_player= gameSession.players.get(gameSession.findNextPlayer(gameSession.clockwise));
                 for (int i = 0; i < 2; i++) {
-                    drawCard(gameSession.deck);
+                    next_player.drawCard(gameSession.deck);
                 }
                 gameSession.color= card.color;
 
             } else if(card.skill=="skip"){
-                gameSession.clockwise = !gameSession.clockwise;
+                gameSession.playerTurn = gameSession.findNextPlayer(gameSession.clockwise);
                 gameSession.color= card.color;
             }
 
@@ -73,6 +76,13 @@ public class Player {
         }
     }
     public void playWildCard(Cards card, GameSession gameSession, String color) {
+        WildCard wildCard = (WildCard) card;
+        if (wildCard.skill=="draw4") {
+            Player next_player= gameSession.players.get(gameSession.findNextPlayer(gameSession.clockwise));
+            for (int i = 0; i < 4; i++) {
+                next_player.drawCard(gameSession.deck);
+            }
+        }
 
         gameSession.color = color;
         gameSession.discardpile = card;

@@ -19,6 +19,7 @@ public class GameSession {
     public ArrayList<Player> players;
     public boolean clockwise;
     public Cards discardpile;
+    public Integer playerTurn;
 
 
     public GameSession(String username) {
@@ -40,6 +41,7 @@ public class GameSession {
         else if (discardpile instanceof WildCard){
             this.color="red";
         }
+        this.playerTurn=3;
     }
 
 
@@ -63,7 +65,7 @@ public class GameSession {
         players.add(player);
         return players;
     }
-    public void drawCards(Cards discardpile, Integer playerTurn){
+    public void drawCards(Cards discardpile){
             Player player = players.get(playerTurn);
             if (discardpile instanceof ActionCards) {
                 ActionCards card = (ActionCards) discardpile;
@@ -83,7 +85,7 @@ public class GameSession {
             }
         }
     }
-    public void playerTurnPlay(Integer playerTurn,String color) throws WrongCardPlayed {
+    public void playerTurnPlay(String color) throws WrongCardPlayed {
         if (playerTurn != 3) {
             Bot bot = (Bot) players.get(playerTurn);
             bot.findCard(this);
@@ -102,7 +104,7 @@ public class GameSession {
 
 
 
-    public Integer findNextPlayer(Integer playerTurn,boolean clockwise){
+    public Integer findNextPlayer(boolean clockwise){
         if (clockwise){
             playerTurn++;
             if (playerTurn>3){

@@ -26,6 +26,7 @@ public class GamePage extends JFrame {
     private JLabel gameDirectionLabel;
     private JLabel colorDiscardPileLabel;
     private GameSession gameSession;
+    private int playerTurn = 3; // Track player turn here
 
     public GamePage(GameSession gameSession) throws WrongCardPlayed {
         this.gameSession = gameSession;
@@ -67,12 +68,12 @@ public class GamePage extends JFrame {
         discardPileLabel.setFont(new Font("Arial", Font.BOLD, 18));
         discardPileLabel.setForeground(Color.WHITE);
         mainPanel.add(discardPileLabel, BorderLayout.CENTER);
-        //Color of the discard pile
+
+        // Color of the discard pile
         colorDiscardPileLabel = new JLabel("Color of the discard pile: " + gameSession.color, SwingConstants.CENTER);
         colorDiscardPileLabel.setFont(new Font("Arial", Font.BOLD, 18));
         colorDiscardPileLabel.setForeground(Color.WHITE);
         mainPanel.add(colorDiscardPileLabel, BorderLayout.EAST);
-
 
         // Game Direction
         gameDirectionLabel = new JLabel("Game Direction: " + (gameSession.clockwise ? "Clockwise" : "Counter-Clockwise"), SwingConstants.CENTER);
@@ -104,27 +105,9 @@ public class GamePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-
-                    int playerTurn = 3;
-                    ;
-
-                    while (!gameSession.isGameEnd()) {
-                        System.out.println("Player " + playerTurn + " turn");
-                        if (playerTurn == 3) {
-                            playSelectedCard();
-                        }
-                        else{
-                        gameSession.playerTurnPlay(playerTurn, "red");
-                        }
-                        playerTurn = gameSession.findNextPlayer(playerTurn, gameSession.clockwise);
-                        gameSession.drawCards(gameSession.discardpile, playerTurn);
-                        updateGameState();
+                    if (playerTurn == 3) {
+                        playSelectedCard();
                     }
-                    Player player = (Player) gameSession.players.get(3);
-                    float score=player.calculateScore(player.getCards_in_hand());
-
-
-
                 } catch (WrongCardPlayed ex) {
                     throw new RuntimeException(ex);
                 }
@@ -212,6 +195,7 @@ public class GamePage extends JFrame {
                 player.playCard(selectedCard, gameSession, "red"); // No color for non-wild cards
             }
             discardPileLabel.setText("Discard Pile: " + getTopDiscardCard()); // Update discard pile
+            playerTurn = gameSession.findNextPlayer( gameSession.clockwise);
             updateGameState(); // Update state after playing card
         } else {
             JOptionPane.showMessageDialog(this, "Please select a card to play.");
@@ -229,15 +213,28 @@ public class GamePage extends JFrame {
     private void updateGameState() throws WrongCardPlayed {
         colorDiscardPileLabel.setText("Color of the discard pile: " + gameSession.color);
         gameDirectionLabel.setText("Game Direction: " + (gameSession.clockwise ? "Clockwise" : "Counter-Clockwise"));
-     loadPlayerHand();
-     botLabels[0].setText("Bot: " + gameSession.players.get(0) + " - Cards: " + ((Bot) gameSession.players.get(0)).cardCount());
-     botLabels[1].setText("Bot: " + gameSession.players.get(1) + " - Cards: " + ((Bot) gameSession.players.get(1)).cardCount());
-     botLabels[2].setText("Bot: " + gameSession.players.get(2) + " - Cards: " + ((Bot) gameSession.players.get(2)).cardCount());
+        loadPlayerHand();
+        botLabels[0].setText("Bot: " + gameSession.players.get(0) + " - Cards: " + ((Bot) gameSession.players.get(0)).cardCount());
+        botLabels[1].setText("Bot: " + gameSession.players.get(1) + " - Cards: " + ((Bot) gameSession.players.get(1)).cardCount());
+        botLabels[2].setText("Bot: " + gameSession.players.get(2) + " - Cards: " + ((Bot) gameSession.players.get(2)).cardCount());
 
+        // Continue bot turns only after player has acted
+        if (playerTurn != 3) {
+            while (playerTurn != 3 && !gameSession.isGameEnd()) {
+                System.out.println("Bot " + playerTurn + " turn");
+                gameSession.playerTurnPlay( "red");
+                discardPileLabel.setText("Discard Pile: " + getTopDiscardCard()); // Update discard pile after bot plays
+                playerTurn = gameSession.findNextPlayer( gameSession.clockwise);
+                gameSession.drawCards(gameSession.discardpile);
+                loadPlayerHand(); // Update player hand for UI
+            }
+            updateGameState(); // Ensure final state is reflected in UI
+        }
 
+        if (gameSession.isGameEnd()) {
+            playCardButton.setEnabled(false);
+            drawCardButton.setEnabled(false);
+            JOptionPane.showMessageDialog(this, "Game Over!");
+        }
     }
-
-
-
-
 }

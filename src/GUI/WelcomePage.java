@@ -163,6 +163,7 @@ public class WelcomePage {
             try {
                 GameSession gameSession = new GameSession(usernameField.getText());
                 GamePage gamePage = new GamePage(gameSession);
+                frame.dispose();
             } catch (WrongCardPlayed e) {
                 throw new RuntimeException(e);
             }
