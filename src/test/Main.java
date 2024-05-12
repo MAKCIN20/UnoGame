@@ -11,6 +11,7 @@
 
 package test;
 
+import GUI.GamePage;
 import GUI.WelcomePage;
 
 import Login.User;
@@ -29,6 +30,7 @@ public class Main {
 
         UserStatistics userStatistics = new UserStatistics();
         WelcomePage x=new WelcomePage();
+
 
 
     }

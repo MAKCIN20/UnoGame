@@ -9,6 +9,7 @@ public class Cards {
     public Cards() {
         this.score = 0;
         this.deck = new ArrayList<>();
+
     }
     public ArrayList<Cards> seperateCards(ArrayList deck){
         ArrayList cards_to_give=new ArrayList();

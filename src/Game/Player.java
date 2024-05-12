@@ -8,6 +8,7 @@ import exceptions.WrongCardPlayed;
 import java.util.ArrayList;
 
 public class Player {
+    public String username;
 
 
     private ArrayList<Cards> cards_in_hand;
@@ -27,7 +28,9 @@ public class Player {
             declearedUNO = true;
         }
     }
-    public void selectCard(Cards card, GameSession gameSession,String color) throws WrongCardPlayed {
+
+    public void playCard(Cards card, GameSession gameSession,String color)  {
+        System.out.println("Playing card: " + card.getClass());
         if(card instanceof NumberCard){
             playNumberCard((NumberCard) card,gameSession);
         }
@@ -38,39 +41,57 @@ public class Player {
             playWildCard(card,gameSession,color);
         }
     }
-    public void playNumberCard(NumberCard card, GameSession gameSession) throws WrongCardPlayed {
+    public void playNumberCard(NumberCard card, GameSession gameSession) {
         GameValidation gameValidation = new GameValidation();
         if(gameValidation.validPlayNumberCard(card,gameSession)){
             gameSession.discardpile = card;
             cards_in_hand.remove(card);
+            gameSession.color = card.color;
         }
     }
-    public void playActionCard(ActionCards card, GameSession gameSession) throws WrongCardPlayed {
+    public void playActionCard(ActionCards card, GameSession gameSession)  {
         GameValidation gameValidation = new GameValidation();
         if(gameValidation.validPlayActionsCards(card,gameSession)){
             gameSession.discardpile = card;
             cards_in_hand.remove(card);
             if(card.skill=="reverse"){
                 gameSession.clockwise = !gameSession.clockwise;
+                gameSession.color= card.color;
 
-            }
-            else if(card.skill=="skip"){
+            } else if (card.skill=="draw2") {
+                for (int i = 0; i < 2; i++) {
+                    drawCard(gameSession.deck);
+                }
+                gameSession.color= card.color;
+
+            } else if(card.skill=="skip"){
                 gameSession.clockwise = !gameSession.clockwise;
+                gameSession.color= card.color;
             }
+
 
         }
     }
     public void playWildCard(Cards card, GameSession gameSession, String color) {
-        if (gameSession.discardpile instanceof NumberCard) {
-            NumberCard numberCard = (NumberCard) gameSession.discardpile;
-            gameSession. = color;
-        } else if (gameSession.discardpile instanceof ActionCards) {
-            ActionCards actionCard = (ActionCards) gameSession.discardpile;
-            actionCard.color = color;
-        }
-        gameSession.discardpile.color = color;
+
+        gameSession.color = color;
         gameSession.discardpile = card;
         cards_in_hand.remove(card);
+
+    }
+    public float calculateScore(ArrayList cards_in_hand){
+        float score = 0;
+        for (int i = 0; i < cards_in_hand.size(); i++) {
+            if (cards_in_hand.get(i) instanceof NumberCard) {
+                NumberCard numberCard = (NumberCard) cards_in_hand.get(i);
+                score += numberCard.number;
+            } else if (cards_in_hand.get(i) instanceof ActionCards) {
+                score += 20;
+            } else {
+                score += 50;
+            }
+        }
+        return score;
 
     }
 

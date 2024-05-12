@@ -6,21 +6,34 @@ import cards.NumberCard;
 import exceptions.WrongCardPlayed;
 
 public class GameValidation {
-    public boolean validPlayNumberCard(NumberCard card,GameSession gameSession) throws WrongCardPlayed {
-        if(card.color==gameSession.color || card.number==gameSession.discardpile.score){
-            return true;
+    public boolean validPlayNumberCard(NumberCard card,GameSession gameSession)  {
+        if (gameSession.discardpile instanceof NumberCard){
+            if(card.color==gameSession.color || card.number==((NumberCard) gameSession.discardpile).number){
+                return true;
+            }
+            else{
+                return false;
+
+            }
+
         }
         else{
-            throw new WrongCardPlayed("Cannot play");
+            if(card.color==gameSession.color){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
+
+
+
     }
-    public boolean validPlayActionsCards(ActionCards card, GameSession gameSession) throws WrongCardPlayed {
+    public boolean validPlayActionsCards(ActionCards card, GameSession gameSession)  {
         if(card.color==gameSession.color ){
             return true;
         }
-        else{
-            throw new WrongCardPlayed("Cannot play this card");
-        }
+      return false;
     }
 
 

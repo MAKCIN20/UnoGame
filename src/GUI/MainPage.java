@@ -1,7 +1,9 @@
 package GUI;
 
+import Game.GameSession;
 import Login.User;
 import Login.UserStatistics;
+import exceptions.WrongCardPlayed;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -55,7 +57,13 @@ public class MainPage extends JFrame {
         playButton.setFont(new Font("Arial", Font.BOLD, 24));
         playButton.setForeground(Color.WHITE);
         playButton.setBackground(Color.BLACK);
-        playButton.addActionListener(e -> startGame());
+        playButton.addActionListener(e -> {
+            try {
+                startGame(currentUser);
+            } catch (WrongCardPlayed ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         add(playButton, BorderLayout.SOUTH);
 
         try {
@@ -88,8 +96,11 @@ public class MainPage extends JFrame {
 
     }
 
-    private void startGame() {
+    private void startGame(String currentUser) throws WrongCardPlayed {
         System.out.println("Starting game...");
+        GameSession gameSession = new GameSession(currentUser);
+        GamePage gamePage = new GamePage(gameSession);
+
     }
     public void leaderBoard(){UserStatistics userStatistics = new UserStatistics();
         HashMap<String, ArrayList<Float>> allStats = userStatistics.getSimpleStatistics();

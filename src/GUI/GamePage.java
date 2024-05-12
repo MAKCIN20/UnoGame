@@ -104,7 +104,27 @@ public class GamePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    playSelectedCard();
+
+                    int playerTurn = 3;
+                    ;
+
+                    while (!gameSession.isGameEnd()) {
+                        System.out.println("Player " + playerTurn + " turn");
+                        if (playerTurn == 3) {
+                            playSelectedCard();
+                        }
+                        else{
+                        gameSession.playerTurnPlay(playerTurn, "red");
+                        }
+                        playerTurn = gameSession.findNextPlayer(playerTurn, gameSession.clockwise);
+                        gameSession.drawCards(gameSession.discardpile, playerTurn);
+                        updateGameState();
+                    }
+                    Player player = (Player) gameSession.players.get(3);
+                    float score=player.calculateScore(player.getCards_in_hand());
+
+
+
                 } catch (WrongCardPlayed ex) {
                     throw new RuntimeException(ex);
                 }
@@ -186,10 +206,10 @@ public class GamePage extends JFrame {
                         colors[0]
                 );
                 if (selectedColor != null) {
-                    player.selectCard(selectedCard, gameSession, selectedColor.toLowerCase());
+                    player.playCard(selectedCard, gameSession, selectedColor.toLowerCase());
                 }
             } else {
-                player.selectCard(selectedCard, gameSession, "red"); // No color for non-wild cards
+                player.playCard(selectedCard, gameSession, "red"); // No color for non-wild cards
             }
             discardPileLabel.setText("Discard Pile: " + getTopDiscardCard()); // Update discard pile
             updateGameState(); // Update state after playing card
@@ -217,11 +237,7 @@ public class GamePage extends JFrame {
 
     }
 
-    public static void main(String[] args) throws WrongCardPlayed {
-        // Example GameSession initialization
-        GameSession gameSession = new GameSession();
 
-        // Launch GamePage
-        new GamePage(gameSession);
-    }
+
+
 }

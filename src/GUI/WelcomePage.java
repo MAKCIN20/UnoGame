@@ -1,6 +1,8 @@
 package GUI;
 
+import Game.GameSession;
 import Login.User;
+import exceptions.WrongCardPlayed;
 
 
 import javax.swing.*;
@@ -158,7 +160,12 @@ public class WelcomePage {
             MainPage mainPage = new MainPage(usernameField.getText());
 
         } else {
-            // Logic for "Play"
+            try {
+                GameSession gameSession = new GameSession(usernameField.getText());
+                GamePage gamePage = new GamePage(gameSession);
+            } catch (WrongCardPlayed e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
