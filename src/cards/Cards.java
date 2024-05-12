@@ -10,6 +10,19 @@ public class Cards {
         this.score = 0;
         this.deck = new ArrayList<>();
     }
+    public ArrayList<Cards> seperateCards(ArrayList deck){
+        ArrayList cards_to_give=new ArrayList();
+        ArrayList<Cards> temp_deck=new ArrayList<Cards>(deck);
+        int index=0;
+        for (int i=0;i<7;i++){
+            cards_to_give.add(temp_deck.get(i));
+            deck.remove(temp_deck.get(i));
+
+        }
+
+        return cards_to_give;
+
+    }
 
     public void initializer() {
         List<NumberCard> numberCards = initializeNumberCard();

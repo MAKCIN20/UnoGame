@@ -26,6 +26,7 @@ public class Main {
         Cards cards=new Cards();
         cards.initializer();
         System.out.println(cards.deck);
+
         UserStatistics userStatistics = new UserStatistics();
         WelcomePage x=new WelcomePage();
 
